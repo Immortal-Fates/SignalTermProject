@@ -65,7 +65,7 @@ disp(['The base frequency is: ', num2str(f_base), ' Hz']);
 
 %%信号重构
 % TODO:设置新基频
-f_new_base = 220; %220Hz
+f_new_base = 180;
 
 % 采用重采样方法
 % 计算新的采样率
@@ -76,6 +76,16 @@ FS_new = round(FS * (f_new_base / f_base));
 
 % 使用新的采样率重采样
 s1_resampled = resample(s1_filter, p, q);
+
+% 设置变调比例
+pitch_ratio = f_new_base / f_base; 
+
+% 设置TSM比例
+tsm_ratio = 1 / pitch_ratio; % 保持原速
+
+% 使用TSM
+s1_resampled = stretchAudio(s1_resampled, tsm_ratio);
+
 
 % 播放重采样后的音频
 sound(s1_resampled, FS_new);
@@ -142,7 +152,7 @@ disp(['The base frequency is: ', num2str(f_base), ' Hz']);
 
 
 % 重构音频的时域波形
-file_refactor='..\audio_output\啦啦啦男shifted_audio.wav';
+file_refactor='..\audio_output\啦啦啦男resampled_audio.wav';
 %音频播放
 [Y, FS] = audioread(file_refactor);
 [m, n] = size(Y);
