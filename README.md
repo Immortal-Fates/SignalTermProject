@@ -63,10 +63,67 @@
 
 
 
+# MATLAB对音频操作
+
+[【MATLAB】关于音频处理的一些常用函数总结](https://blog.csdn.net/Magician0619/article/details/104778202)
+
+
+
+
+
+# 代码实现日志
+
+## 直接分析音频
+
+1-9男有噪音
+
+![image-20240527202842926](markdown-img/README.assets/image-20240527202842926.png)
+
+![image-20240527205156722](markdown-img/README.assets/image-20240527205156722.png)
+
+
+
+1-9女有噪音
+
+![image-20240527202942236](markdown-img/README.assets/image-20240527202942236.png)
+
+![image-20240527205102782](markdown-img/README.assets/image-20240527205102782.png)
+
+
+
+根据男生、女生的基频判断，噪声非常大，我们需要加窗滤掉高频噪声
+
+
+
+## 基频追踪
+
+- 低通滤波
+
+  由于语音信号中可能有高频噪声，或者是语音本身的共振峰，都会影响自相关函数的计算。当信号中有高频成分时，自相关函数会计算出多个波峰，而基频的计算是根据自相关函数的波峰位置确定的，波峰太多会提高后续基频筛选的难度，因此需要用低通滤波滤除。低通滤波的截止频率一般选取600Hz，这是考虑到有些人在说话时基频可能能够达到600Hz；
+
+- 峰值检测
+
+  除了排除清音以外，如果判断到当前帧是噪声，也需要跳过基频计算的步骤，这样可以避免错误的基频。我在算法中用了最简单的峰值检测来判断是否是噪声，这是基于一个假设：噪声段的信号强度一般小于语音段的信号强度，只要检测一帧内的最大峰值是否大于某个阈值，就可以判断这一帧是否是噪声。
+
+
+
+
+
+
+
+## 信号重构
+
 
 
 # References
 
 - [变声导论-变声器原理及实现(核心算法实现篇)](https://zhuanlan.zhihu.com/p/110278983)
+- [变声导论-变声器原理及实现(基音分类与滤波系统实现) - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/111889443)
 - [人声变声器的原理_变声软件 原理](https://blog.csdn.net/zhuoqingjoking97298/article/details/125581253)
 
+- [分享matlab程序之——滤波器篇（高通，低通） - tkppain - 博客园 (cnblogs.com)](https://www.cnblogs.com/tkppain/p/6691052.html?utm_source=itdadao&utm_medium=referral)
+- [数字信号处理大作业——基于matlab R2019a的男声变女声资料汇总与代码_数字信号处理 男声变女声-CSDN博客](https://blog.csdn.net/weixin_46279604/article/details/109252160)
+
+- [【MATLAB】关于音频处理的一些常用函数总结-CSDN博客](https://blog.csdn.net/Magician0619/article/details/104778202)
+
+- [变声算法实现（基频追踪+SOLA）_voice morph-CSDN博客](https://blog.csdn.net/qq_36787927/article/details/105958824)
